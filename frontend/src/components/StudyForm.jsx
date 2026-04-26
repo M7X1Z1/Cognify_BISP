@@ -24,10 +24,10 @@ const formatFileSize = (bytes) =>
     ? (bytes / (1024 * 1024)).toFixed(1) + ' MB'
     : (bytes / 1024).toFixed(1) + ' KB';
 
-const getFileIcon = (f) => {
-  if (f.type === 'application/pdf') return '📄';
-  if (f.type.includes('word') || f.type.includes('msword')) return '📝';
-  if (f.type.includes('presentation') || f.type.includes('powerpoint')) return '📊';
+const getFileIcon = (file) => {
+  if (file.type === 'application/pdf') return '📄';
+  if (file.type.includes('word') || file.type.includes('msword')) return '📝';
+  if (file.type.includes('presentation') || file.type.includes('powerpoint')) return '📊';
   return '📃';
 };
 
@@ -41,20 +41,20 @@ export default function StudyForm({ onSubmit, loading }) {
   const fileRef = useRef(null);
 
   const handleFileChange = (e) => {
-    const f = e.target.files[0];
-    if (!f) return;
-    if (!ACCEPTED_TYPES[f.type]) {
+    const selectedFile = e.target.files[0];
+    if (!selectedFile) return;
+    if (!ACCEPTED_TYPES[selectedFile.type]) {
       setFileError('Unsupported file type. Please upload a .txt, .pdf, .docx, or .pptx file.');
       setFile(null);
       return;
     }
-    if (f.size > MAX_FILE_SIZE) {
+    if (selectedFile.size > MAX_FILE_SIZE) {
       setFileError('File must be under 20 MB.');
       setFile(null);
       return;
     }
     setFileError('');
-    setFile(f);
+    setFile(selectedFile);
     setInputText('');
   };
 
@@ -84,6 +84,7 @@ export default function StudyForm({ onSubmit, loading }) {
   const trimmedLength = inputText.trim().length;
   const charCount = inputText.length;
   const overLimit = charCount > 500000;
+  const nearLimit = !overLimit && charCount > 450000;
   const isDisabled = loading || overLimit || (!file && trimmedLength === 0);
   const uploadDisabled = trimmedLength > 0;
 
@@ -102,8 +103,8 @@ export default function StudyForm({ onSubmit, loading }) {
           disabled={!!file}
           style={{ resize: 'vertical', fontFamily: 'inherit', lineHeight: 1.7 }}
         />
-        <span style={{ fontSize: '0.78rem', marginTop: '0.2rem', color: overLimit ? '#dc2626' : 'var(--text-light)', display: 'block' }}>
-          {charCount.toLocaleString()} / 500,000 characters{overLimit && ' — too long'}
+        <span style={{ fontSize: '0.78rem', marginTop: '0.2rem', color: overLimit ? '#dc2626' : nearLimit ? '#d97706' : 'var(--text-light)', display: 'block' }}>
+          {charCount.toLocaleString()} / 500,000 characters{overLimit ? ' — too long' : nearLimit ? ' — approaching limit' : ''}
         </span>
       </div>
 

@@ -1,19 +1,5 @@
 import { useState, useEffect } from 'react';
-
-function parseFlashcards(text) {
-  const blocks = text.trim().split(/\n\s*\n/);
-  return blocks
-    .map(block => {
-      const lines = block.trim().split('\n').map(l => l.trim()).filter(Boolean);
-      const qIdx = lines.findIndex(l => l.startsWith('Q:'));
-      const aIdx = lines.findIndex(l => l.startsWith('A:'));
-      if (qIdx === -1 || aIdx === -1) return null;
-      const question = lines.slice(qIdx, aIdx).join(' ').replace(/^Q:\s*/, '');
-      const answer = lines.slice(aIdx).join(' ').replace(/^A:\s*/, '');
-      return { question, answer };
-    })
-    .filter(Boolean);
-}
+import { parseFlashcards } from '../utils/outputParsers';
 
 export default function FlashcardsOutput({ output }) {
   const cards = parseFlashcards(output);

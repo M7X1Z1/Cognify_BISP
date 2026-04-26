@@ -13,7 +13,9 @@ async function extractTextFromFile(file) {
   if (file.mimetype === 'text/plain') return file.buffer.toString('utf-8');
   if (file.mimetype === 'application/pdf') {
     const data = await pdfParse(file.buffer);
-    return data.text;
+    // pdf-parse resolves to a pdfData object — guard against unexpected shapes
+    const text = typeof data === 'string' ? data : (data?.text ?? '');
+    return String(text);
   }
   if (DOCX_MIMETYPES.has(file.mimetype)) {
     const result = await mammoth.extractRawText({ buffer: file.buffer });
@@ -43,8 +45,10 @@ const generate = async (req, res) => {
   }
 
   // validate everything before sending to the AI
-  if (!inputText || inputText.trim().length === 0)
+  const safeInput = typeof inputText === 'string' ? inputText : String(inputText ?? '');
+  if (!safeInput.trim())
     return res.status(400).json({ error: 'Input text is required.' });
+  inputText = safeInput;
   if (inputText.length > 500000)
     return res.status(400).json({ error: 'Input text must not exceed 500,000 characters.' });
   if (!VALID_MODES.includes(mode))

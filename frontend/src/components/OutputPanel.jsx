@@ -4,6 +4,7 @@ import DOMPurify from 'dompurify';
 import QuizOutput from './QuizOutput';
 import FlashcardsOutput from './FlashcardsOutput';
 import { MODE_MAP } from '../constants/modes';
+import { downloadAsWord } from '../utils/wordExport';
 
 const FALLBACK = { label: 'Output', icon: '📄', color: '#4f46e5', bg: '#eef2ff' };
 
@@ -18,15 +19,7 @@ export default function OutputPanel({ output, mode }) {
     }).catch(() => {});
   };
 
-  const handleDownload = () => {
-    const blob = new Blob([output], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `study-${mode}-${Date.now()}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  const handleDownload = () => downloadAsWord(output, mode);
 
   if (!output) return null;
 
@@ -92,7 +85,7 @@ export default function OutputPanel({ output, mode }) {
               transition: 'background 0.15s',
             }}
           >
-            ⬇ Download
+            ⬇ Download as Word
           </button>
         </div>
       </div>

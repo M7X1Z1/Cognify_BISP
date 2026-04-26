@@ -14,7 +14,7 @@ export default function Navbar() {
       <div style={styles.inner}>
         <Link to={isAuthenticated ? '/dashboard' : '/login'} style={styles.brand}>
           <span style={styles.brandIcon}>🎓</span>
-          Cognify_BISP
+          Cognify
         </Link>
         <div style={styles.links}>
           {isAuthenticated ? (

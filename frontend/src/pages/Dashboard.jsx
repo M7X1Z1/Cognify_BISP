@@ -27,7 +27,7 @@ export default function Dashboard() {
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '3rem' }}>
       <div className="page-header">
-        <h1>Cognify_BISP</h1>
+        <h1>Cognify</h1>
         <p>Paste your material or upload a file and choose how you want it transformed.</p>
       </div>
 
