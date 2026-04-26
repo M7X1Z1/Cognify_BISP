@@ -27,15 +27,6 @@ app.use('/api/study', require('./routes/studyRoutes'));
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
-// on Railway we serve the React app from the same server
-// any URL that isn't an API route just gets index.html and React Router takes over
-if (process.env.NODE_ENV === 'production') {
-  const path = require('path');
-  const distPath = path.join(__dirname, '../frontend/dist');
-  app.use(express.static(distPath));
-  app.get('*', (req, res) => res.sendFile(path.join(distPath, 'index.html')));
-}
-
 // catch errors from multer (bad file type, file too big) and anything else unexpected
 app.use((err, req, res, next) => {
   if (err.message === 'Only .txt, .pdf, .docx, and .pptx files are allowed.') {
