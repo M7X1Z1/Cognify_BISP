@@ -2,6 +2,8 @@
 
 A study assistant that turns notes into summaries, quizzes, and flashcards using AI.
 
+Deployed app URL: https://frontend-production-6a6e.up.railway.app/login
+
 ## What it does
 
 You paste in study material (or upload a PDF, DOCX, PPTX, or TXT file up to 20 MB) and pick what you want done with it:
